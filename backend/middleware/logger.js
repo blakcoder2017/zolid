@@ -1,81 +1,72 @@
+// backend/middleware/logger.js
 const winston = require('winston');
-const { v4: uuidv4 } = require('uuid');
+const path = require('path');
 
-// Configure Winston logger
-const logger = winston.createLogger({
-    level: process.env.LOG_LEVEL || 'info',
-    format: winston.format.combine(
-        winston.format.timestamp(),
-        winston.format.errors({ stack: true }),
-        winston.format.json()
-    ),
-    defaultMeta: { service: 'zolid-backend' },
-    transports: [
-        // Write all logs with level 'error' and below to error.log
-        new winston.transports.File({ 
-            filename: 'logs/error.log', 
-            level: 'error',
-            maxsize: 5242880, // 5MB
-            maxFiles: 5
-        }),
-        // Write all logs to combined.log
-        new winston.transports.File({ 
-            filename: 'logs/combined.log',
-            maxsize: 5242880, // 5MB
-            maxFiles: 5
-        })
-    ]
-});
+// Determine if we are in a read-only environment (Vercel)
+const isVercel = process.env.IS_VERCEL === 'true' || process.env.VERCEL === '1';
 
-// Add console transport in non-production environments
-if (process.env.NODE_ENV !== 'production') {
-    logger.add(new winston.transports.Console({
+// Define log format
+const logFormat = winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+);
+
+// Configure Transports
+const transports = [
+    // 1. ALWAYS Log to Console (Required for Vercel/Cloud logs)
+    new winston.transports.Console({
         format: winston.format.combine(
             winston.format.colorize(),
             winston.format.simple()
         )
-    }));
+    })
+];
+
+// 2. ONLY Log to File if running Locally (Not Vercel)
+if (!isVercel) {
+    // Ensure we don't crash if folder creation fails locally (optional safety)
+    try {
+        transports.push(
+            new winston.transports.File({ 
+                filename: 'logs/error.log', 
+                level: 'error' 
+            })
+        );
+        transports.push(
+            new winston.transports.File({ 
+                filename: 'logs/combined.log' 
+            })
+        );
+    } catch (e) {
+        console.warn("⚠️ Could not initialize file logging (ignoring):", e.message);
+    }
 }
 
-// Request logging middleware
+const logger = winston.createLogger({
+    level: process.env.LOG_LEVEL || 'info',
+    format: logFormat,
+    transports: transports
+});
+
+// Request Logger Middleware
 const requestLogger = (req, res, next) => {
+    // Skip logging for health checks to reduce noise
+    if (req.originalUrl === '/health') return next();
+
     const start = Date.now();
-    const requestId = uuidv4();
-    
-    // Add request ID to request object
-    req.request_id = requestId;
-    
-    // Log request
-    logger.info('Incoming request', {
-        request_id: requestId,
-        method: req.method,
-        url: req.originalUrl,
-        ip: req.ip,
-        user_agent: req.get('User-Agent'),
-        timestamp: new Date().toISOString()
-    });
-    
-    // Override res.end to log response
-    const originalEnd = res.end;
-    res.end = function(...args) {
+    res.on('finish', () => {
         const duration = Date.now() - start;
-        
-        logger.info('Request completed', {
-            request_id: requestId,
+        logger.info({
+            message: 'Request completed',
             method: req.method,
             url: req.originalUrl,
-            status_code: res.statusCode,
-            duration_ms: duration,
-            timestamp: new Date().toISOString()
+            status: res.statusCode,
+            duration: `${duration}ms`,
+            ip: req.ip || req.connection.remoteAddress,
+            userAgent: req.get('user-agent')
         });
-        
-        originalEnd.apply(this, args);
-    };
-    
+    });
     next();
 };
 
-module.exports = {
-    logger,
-    requestLogger
-};
+module.exports = { logger, requestLogger };
