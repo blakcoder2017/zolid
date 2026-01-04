@@ -2,6 +2,26 @@
 const admin = require('firebase-admin');
 const { v4: uuidv4 } = require('uuid');
 const path = require('path');
+if (!admin.apps.length) {
+    try {
+        // Check for required variables
+        if (!process.env.FIREBASE_STORAGE_BUCKET) {
+            throw new Error("Missing FIREBASE_STORAGE_BUCKET environment variable");
+        }
+
+        const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT 
+            ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT) 
+            : {};
+            
+        admin.initializeApp({
+            credential: admin.credential.cert(serviceAccount),
+            storageBucket: process.env.FIREBASE_STORAGE_BUCKET
+        });
+        console.log("🔥 Firebase Storage Initialized");
+    } catch (error) {
+        console.error("⚠️ Firebase Init Error:", error.message);
+    }
+}
 
 // Initialize Firebase (Singleton pattern to prevent multiple inits)
 if (!admin.apps.length) {
