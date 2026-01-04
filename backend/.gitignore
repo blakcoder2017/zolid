@@ -1,0 +1,64 @@
+# Node.js
+node_modules/
+
+# Logs
+logs/
+*.log
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# IDE and Editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build output
+dist/
+build/
+
+# Dependencies
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Database
+*.sqlite
+*.db
+
+# Uploads
+uploads/
+
+# Test reports
+test-report.json
+test-results/
+coverage/
+nyc_output/
+
+# Debug
+*.out
+
+# Cache
+.cache/
+
+# Temporary files
+*.tmp
+*.bak
+
+# Backend specific
+logs/
+uploads/
+
+# Hidden files
+.*
+
+# Except .gitignore and .env
+!.gitignore
+!.env
+.md

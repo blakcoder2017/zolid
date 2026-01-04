@@ -1,0 +1,55 @@
+{
+  "summary": {
+    "total": 7,
+    "passed": 0,
+    "failed": 3,
+    "skipped": 4
+  },
+  "passed": [],
+  "failed": [
+    {
+      "endpoint": "POST /identity/artisan/signup/verify",
+      "success": false,
+      "status": 503,
+      "data": {
+        "error": "Service Unavailable: Database connection failed."
+      },
+      "description": "Artisan MoMo Verification"
+    },
+    {
+      "endpoint": "POST /identity/artisan/login",
+      "success": false,
+      "status": 503,
+      "data": {
+        "error": "Service Unavailable: Database connection failed."
+      },
+      "description": "Artisan Login"
+    },
+    {
+      "endpoint": "POST /identity/client/login",
+      "success": false,
+      "status": 503,
+      "data": {
+        "error": "Service Unavailable: Database connection failed."
+      },
+      "description": "Client Login"
+    }
+  ],
+  "skipped": [
+    {
+      "endpoint": "POST /identity/client/register"
+    },
+    {
+      "endpoint": "POST /upload/job-photos",
+      "reason": "Requires file upload"
+    },
+    {
+      "endpoint": "POST /upload/ghana-card",
+      "reason": "Requires file upload"
+    },
+    {
+      "endpoint": "GET /upload/file/:filename",
+      "reason": "Requires existing file"
+    }
+  ]
+}

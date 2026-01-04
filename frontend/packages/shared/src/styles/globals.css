@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;900&family=Barlow+Condensed:wght@400;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans text-navy-900 bg-grey-50;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-condensed;
+  }
+
+  /* Tabular numbers for finance */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer components {
+  /* Custom component styles can go here */
+}
+
+@layer utilities {
+  /* Custom utilities can go here */
+  
+  /* Safe area padding for iOS devices (bottom navigation) */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+}

@@ -1,0 +1,83 @@
+# Node.js
+node_modules/
+
+# Logs
+logs
+*.log
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# IDE and Editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build output
+build/
+dist/
+
+# Dependencies
+package-lock.json
+
+# Database
+*.sqlite
+*.db
+
+# Uploads
+uploads/
+
+# OS generated files
+*.local
+
+# Firebase
+firebase-adminsdk-*.json
+
+# Coverage
+coverage/
+
+# Test reports
+nyc_output/
+
+# Debug
+*.log
+*.out
+
+# Cache
+.cache/
+
+# Temporary files
+*.tmp
+*.bak
+
+# Backend specific
+backend/logs/
+backend/uploads/
+
+# Frontend specific
+frontend/packages/*/node_modules/
+frontend/packages/*/dist/
+frontend/packages/*/build/
+
+# Misc
+*.pdf
+*.docx
+*.xlsx
+*.csv
+*.md
+
+# Hidden files
+.*
+
+# Except .gitignore and .env
+!.gitignore
+.env
+
+# Except .git directory
+!.git/

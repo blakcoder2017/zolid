@@ -1,0 +1,33 @@
+{
+  "name": "zolid-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ZOLID Frontend Monorepo - Landing, Artisan PWA, Client PWA",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "generate-sw": "node scripts/generate-sw.js",
+    "install:all": "npm install",
+
+    "//--- Development (Auto-generates SW keys first) ---": "",
+    "dev:landing": "npm run generate-sw && npm run dev --workspace=@zolid/landing",
+    "dev:artisan": "npm run generate-sw && npm run dev --workspace=@zolid/artisan",
+    "dev:client": "npm run generate-sw && npm run dev --workspace=@zolid/client",
+    "dev:admin": "npm run generate-sw && npm run dev --workspace=@zolid/admin",
+    
+    "//--- Build (Auto-generates SW keys first) ---": "",
+    "build:landing": "npm run generate-sw && npm run build --workspace=@zolid/landing",
+    "build:artisan": "npm run generate-sw && npm run build --workspace=@zolid/artisan",
+    "build:client": "npm run generate-sw && npm run build --workspace=@zolid/client",
+    "build:admin": "npm run generate-sw && npm run build --workspace=@zolid/admin",
+    "build:all": "npm run generate-sw && npm run build --workspaces"
+  },
+  "devDependencies": {
+    "dotenv": "^16.4.5"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
